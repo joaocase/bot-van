@@ -43,48 +43,49 @@ O bot responde aos seguintes comandos dentro do grupo oficial:
 1. **Clone o repositório:**
    ```bash
    git clone https://github.com/joaocase/bot-van.git
+   
+   ```
 
-```
 
 2. **Instale as dependências:**
-```bash
-npm install
+   ```bash
+   npm install
 
-```
+   ```
 
 
 3. **Configure os Dados Sensíveis (Variáveis de Ambiente):**
 Crie um arquivo `.env` na raiz do projeto com as seguintes chaves (substitua pelos dados reais):
-```env
-GRUPO_VAN_ID=id_do_grupo@g.us
-MEU_LID=seu_id@lid
-MEU_NUMERO=seu_numero@s.whatsapp.net
-MOTORISTA_LID=id_do_motorista@lid
-MOTORISTA_NUMERO=numero_do_motorista@s.whatsapp.net
+   ```env
+   GRUPO_VAN_ID=id_do_grupo@g.us
+   MEU_LID=seu_id@lid
+   MEU_NUMERO=seu_numero@s.whatsapp.net
+   MOTORISTA_LID=id_do_motorista@lid
+   MOTORISTA_NUMERO=numero_do_motorista@s.whatsapp.net
 
-```
+   ```
 
 
 4. **Vincule as Variáveis no Código:**
 Certifique-se de que o seu arquivo `index.js` está consumindo essas variáveis para blindar o sistema. A trava do grupo e os números VIPs devem puxar o `process.env`:
-```javascript
-const GRUPO_VAN_ID = process.env.GRUPO_VAN_ID;
+   ```javascript
+   const GRUPO_VAN_ID = process.env.GRUPO_VAN_ID;
 
-const NUMEROS_AUTORIZADOS = [
-    process.env.MEU_LID,
-    process.env.MEU_NUMERO,
-    process.env.MOTORISTA_LID,
-    process.env.MOTORISTA_NUMERO
-];
+   const NUMEROS_AUTORIZADOS = [
+      process.env.MEU_LID,
+      process.env.MEU_NUMERO,
+      process.env.MOTORISTA_LID,
+      process.env.MOTORISTA_NUMERO
+   ];
 
-```
+   ```
 
 
 5. **Inicie o servidor:**
-```bash
-node index.js
+   ```bash
+   node index.js
 
-```
+   ```
 
 
 *Um QR Code será gerado no terminal. Escaneie-o com a função "Aparelhos Conectados" do seu WhatsApp para iniciar a sessão.*
