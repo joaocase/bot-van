@@ -1,5 +1,11 @@
 require('dotenv').config();
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
+const { 
+    default: makeWASocket, 
+    useMultiFileAuthState, 
+    DisconnectReason, 
+    fetchLatestBaileysVersion 
+} = require('@whiskeysockets/baileys');
+const pino = require('pino');
 const qrcode = require('qrcode-terminal');
 const express = require('express');
 
@@ -32,11 +38,18 @@ let listaEstudantes = [];
 async function conectarAoWhatsapp() {
     const { state, saveCreds } = await useMultiFileAuthState('pasta_sessao');
 
+    const { version, isLatest } = await fetchLatestBaileysVersion();
+    console.log(`🌐 Usando WhatsApp Web v${version.join('.')}` + (isLatest ? ' (Mais recente)' : ''));
+
     const sock = makeWASocket({
+        version,
         auth: state,
+        logger: pino({ level: 'silent' }),
         printQRInTerminal: false,
         syncFullHistory: false
     });
+
+    botSocket = sock;
 
     sock.ev.on('creds.update', saveCreds);
 
@@ -49,16 +62,16 @@ async function conectarAoWhatsapp() {
         }
         
         if (connection === 'open') {
-            console.log('✅ Bot conectado com data automática ativada!');
+            console.log('✅ Bot conectado com sucesso!');
         }
 
         if (connection === 'close') {
             const codigoErro = lastDisconnect?.error?.output?.statusCode;
             if (codigoErro !== DisconnectReason.loggedOut) {
-                console.log('🔄 Reconectando automaticamente...');
-                conectarAoWhatsapp();
+                console.log('🔄 Conexão oscilou. Reconectando em 5 segundos...');
+                setTimeout(conectarAoWhatsapp, 5000);
             } else {
-                console.log('❌ Você foi deslogado do WhatsApp pelo celular.');
+                console.log('❌ Sessão encerrada. Você foi deslogado do WhatsApp pelo celular.');
             }
         }
     });
