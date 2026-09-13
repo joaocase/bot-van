@@ -28,7 +28,9 @@ const NUMEROS_AUTORIZADOS = [
     process.env.MEU_ID,
     process.env.MEU_NUMERO,
     process.env.MOTORISTA_ID,
-    process.env.MOTORISTA_NUMERO
+    process.env.MOTORISTA_NUMERO,
+    process.env.MEU_ID_SEC,
+    process.env.MEU_NUMERO_SEC
 ];
 
 // 3. VARIÁVEIS GLOBAIS DA VAN
