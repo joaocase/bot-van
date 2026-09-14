@@ -53,15 +53,30 @@ async function conectarAoWhatsapp() {
 
     botSocket = sock;
 
+    // 📱 CÓDIGO DE PAREAMENTO (Caso o bot não esteja logado)
+    if (!sock.authState.creds.registered) {
+        const numeroBot = process.env.NUMERO_BOT; // Pega o número do .env
+
+        if (!numeroBot) {
+            console.log('⚠️ NUMERO_BOT não foi definido nas variáveis de ambiente!');
+        } else {
+            setTimeout(async () => {
+                try {
+                    const code = await sock.requestPairingCode(numeroBot);
+                    console.log(`\n====================================`);
+                    console.log(`📱 CÓDIGO DE PAREAMENTO: ${code}`);
+                    console.log(`====================================\n`);
+                } catch (err) {
+                    console.error('❌ Erro ao gerar o código de pareamento:', err);
+                }
+            }, 3000);
+        }
+    }
+
     sock.ev.on('creds.update', saveCreds);
 
     sock.ev.on('connection.update', (update) => {
-        const { connection, qr, lastDisconnect } = update;
-        
-        if (qr) {
-            qrcode.generate(qr, { small: true });
-            console.log('👉 ESCANEIE O QR CODE COM O SEU WHATSAPP PESSOAL');
-        }
+        const { connection, lastDisconnect } = update;
         
         if (connection === 'open') {
             console.log('✅ Bot conectado com sucesso!');
